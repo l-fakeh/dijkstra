@@ -6,36 +6,36 @@
 using namespace std;
 const int N = 100010;
 typedef pair<int,int> PII;
-int dist[N];
+int dist[N],e[N],ne[N],w[N],h[N];
+int idx;
 bool vis[N];
-int h[N],e[N],ne[N],w[N],idx;
-void add(int a,int b,int c) {
-    e[idx] = b,ne[idx] = h[a],w[idx] = c,h[a] = idx++;
+void add(int a ,int b, int c) {
+    e[idx] = b,ne[idx] = h[a],w[idx] = c,h[a] = idx ++;
 }
 int main() {
     int n,m;
     cin >> n >> m;
-    memset(vis,false,sizeof(vis));
-    memset(dist,0x3f,sizeof(dist));
+    memset(vis,0,sizeof(vis));
     memset(h,-1,sizeof(h));
+    memset(dist,0x3f,sizeof(dist));
     while(m--) {
         int a,b,c;
         cin >> a >> b >> c;
         add(a,b,c);
     }
-    function<int()> dijkstra = [&]() -> int{
+    function<int()> dijkstra = [&]() -> int {
         priority_queue<PII,vector<PII>,greater<PII>> heap;
-        heap.push({0,1});
-        while(heap.size()) {
+        heap.push({1,0});
+        while(!heap.empty()) {
             auto t = heap.top();
             heap.pop();
-            int cnt = t.second,dis = t.first;
+            int cnt = t.first,dis = t.second;
             if(vis[cnt]) continue;
             vis[cnt] = true;
-            for(int i = h[cnt];i != -1; i = ne[i]) {
+            for(int i = h[cnt];i != -1; i = ne[i]){
                 int j = e[i];
                 dist[j] = min(dist[j],dis + w[i]);
-                heap.push({dist[j],j});
+                heap.push({j,dist[j]});
             }
         }
         return dist[n] == 0x3f3f3f3f ? -1 : dist[n];
@@ -43,4 +43,3 @@ int main() {
     cout << dijkstra() << '\n';
     return 0;
 }
-
